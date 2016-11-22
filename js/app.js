@@ -21,6 +21,36 @@ angular.module('myApp', ['ionic'])
   }
 })
 
+.controller('DetailCtrl', function($scope, $stateParams, Current){
+  $scope.item = Current.get($stateParams.currentId);
+})
+
+.config(function($ionicConfigProvider) {
+  $ionicConfigProvider.backButton.previousTitleText(false);
+  $ionicConfigProvider.backButton.text(null);
+})
+
+.config(function($stateProvider, $urlRouterProvider) {
+  $stateProvider
+  .state('scaffold', {
+    abstract : true,
+    templateUrl : "templates/scaffold.html"
+  })
+  .state('current', {
+    url : '/current',
+    parent : "scaffold",
+    templateUrl : "templates/current.html",
+    controller : 'CurrentCtrl'
+  })
+  .state('detail', {
+    url : '/current/:currentId',
+    parent : 'scaffold',
+    templateUrl : "templates/current-detail.html",
+    controller : "DetailCtrl"
+  })
+  $urlRouterProvider.otherwise("/current");
+})
+
 .factory('Current', function(){
   var items = [
    {
