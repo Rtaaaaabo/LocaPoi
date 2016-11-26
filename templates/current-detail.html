@@ -1,6 +1,8 @@
 <ion-view view-title="{{item.title}}">
-  <ion-content class="padding">
-    <h2 style="text-align : center;">{{item.title}}</h2>
-    <h3 style="text-align : center;">{{item.distance}} M</h3>
-  </ion-content>
+    <ion-content class="padding">
+        <img ng-src="{{item.image}}" class="img-circle profile-image">
+        <h2 style="text-align : center;">{{item.title}}</h2>
+        <h3 style="text-align : center;">{{item.distance}} M</h3>
+        <p>{{item.guide}}</p>
+    </ion-content>
 </ion-view>
