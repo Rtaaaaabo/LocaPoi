@@ -1,7 +1,10 @@
 angular.module('myApp.service',[])
 
 .factory('Current', function(){
-  var items = [
+
+
+
+  /*var items = [
    {
       id:0,
       title : '古川未鈴',
@@ -53,5 +56,5 @@ angular.module('myApp.service',[])
       }
       return null;
     }
-  };
+  };*/
 })
