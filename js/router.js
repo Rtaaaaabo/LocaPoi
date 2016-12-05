@@ -19,6 +19,7 @@ angular.module('myApp.router', [])
     templateUrl : "templates/current.html",
     controller : 'CurrentCtrl'
   })
+
   .state('detail', {
     url : '/current/:currentId',
     parent : 'scaffold',

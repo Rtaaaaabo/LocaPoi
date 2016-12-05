@@ -7,29 +7,34 @@ angular.module('myApp.service',[])
   //現在地から求めたいので仮で指定
   var latitude = 35.681298;
   var longitude = 139.766247;
-  var params = {
+  var page = 0;
+  /*var params = {
     keyid : keyId,
     latitude : latitude,
     longitude : longitude,
     range : 3,
+    offset_page : page,
     callback : 'JSON_CALLBACK',
     format : 'json'
-  };
+  };*/
 
   return {
-    getCurrent : function() {
-      return $http.jsonp(api, {params : params}).then(function(response){
-        items = response.data.rest;
-        console.log(items);
-        return items;
+    getCurrent : function(page) {
+      return $http.jsonp(api, {
+        params : {
+          keyid : keyId,
+          latitude : latitude,
+          longitude : longitude,
+          range : 3,
+          offset_page : page,
+          callback : 'JSON_CALLBACK',
+          format : 'json'
+        }
+      }).then(function(response){
+        console.log(page);
+        items = response;
+        return items.data.rest;
       })
-
-    },
-    /*getNewCurrent : function() {
-      return $http.jsonp(api, {params : params})
-      .sucess(function(result) {
-        items = result.rest;
-      });
-    }*/
+    }
   }
 })
