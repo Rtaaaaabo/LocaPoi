@@ -1,4 +1,7 @@
 <ion-view view-title="LocalPoint">
+<ion-nav-buttons side="right">
+  <button class="button button-icon ion-ios-navigate" ng-click="getLocal()"></button>
+</ion-nav-buttons>
   <ion-content ng-cloak>
     <ion-list>
       <ion-item class="item-thumbnail-left" ng-repeat="item in items" item="item" href="#/current/{{item.id}}">
