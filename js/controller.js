@@ -17,5 +17,6 @@ angular.module('myApp.controller', [])
 
 //★★★★★★★★★DetailCtrl★★★★★★★★★★★★
 .controller('DetailCtrl', function($scope, $stateParams, Current){
-  $scope.items = Current.get($stateParams.currentId);
+  $scope.item = Current.get($stateParams.currentId);
+  console.log($scope.item);
 })

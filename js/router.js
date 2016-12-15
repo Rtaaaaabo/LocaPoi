@@ -13,6 +13,7 @@ angular.module('myApp.router', [])
     abstract : true,
     templateUrl : "templates/scaffold.html"
   })
+
   .state('current', {
     url : '/current',
     parent : "scaffold",

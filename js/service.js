@@ -25,11 +25,15 @@ angular.module('myApp.service',[])
         return items.data.rest;
       })
     },
+    get : function(currentId) {
+      for(var i=0; i<items.data.rest.length; i++) {
+        console.log(items.data.rest[i]);
+        console.log(currentId);
+        if(items.data.rest[i].id === currentId){
+          return items.data.rest[i];
+        }
+      }
+      return null;
+    }
   };
 })
-
-    /*getCurrent : function() {
-      return $ionicPlatform.ready().then(function() {
-         $cordovaGeolocation.getCurrentPosition(positionOptions);
-      })
-    }*/
