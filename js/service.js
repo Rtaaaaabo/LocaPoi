@@ -1,31 +1,15 @@
 angular.module('myApp.service',[])
-
-.factory('geoDataFactory', function($cordovaGeolocation, $location){
-  return {
-    currLatLoc : {},
-    $setGeoloc : function() {
-      $cordovaGeolocation
-      .getCurrentPosition({timeout:10000, enableHighAccuracy:false})
-      .then(function(position) {
-        return currLatLoc = {"lat" : position.coords.latitude, "lon" : position.coords.longitude};
-      }, function(err) {
-        return {"error" : err}
-      });
-    }
-  }
-})
-
-
-
-.factory('Current', function($http, $ionicPlatform, $cordovaGeolocation, geoDataFactory){
+.factory('Current', function($http){
   var items = [];
   var api = 'http://api.gnavi.co.jp/RestSearchAPI/20150630/';   //レストランAPIのURL
   var keyId = '16066d25035a3a1853e0a5220e77ab00'; //アクセスキー
-
   var page = 0;
-  var positionOptions = {timeout:10000, enableHighAccuracy:false};
+  //var currentOptions = {timeout:3000, enableHighAccuracy:false};
+  var latitude = 35.856999;
+  var longitude = 139.648849;
+
   return {
-    getCurrent : function(page) {
+    getShop : function(page) {
       return $http.jsonp(api, {
         params : {
           keyid : keyId,
@@ -41,11 +25,11 @@ angular.module('myApp.service',[])
         return items.data.rest;
       })
     },
+  };
+})
 
-    /*getPosition : function() {
+    /*getCurrent : function() {
       return $ionicPlatform.ready().then(function() {
          $cordovaGeolocation.getCurrentPosition(positionOptions);
       })
     }*/
-  };
-})
