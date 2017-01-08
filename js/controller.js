@@ -1,22 +1,25 @@
 angular.module('myApp.controller', [])
 
 //★★★★★★★★★CurrentCtrl★★★★★★★★★★★★
-.controller('CurrentCtrl', function($scope, $timeout, $cordovaGeolocation, Current){
+.controller('CurrentCtrl', function($scope, $cordovaGeolocation, Current){
   $scope.items = [];
-  $scope.page = 1;
+  $scope.item;
+  var page = 1;
 
   $scope.loadMoreData = function() {
-    Current.getShop($scope.page).then(function(items) {
-        $scope.items = $scope.items.concat(items);
-        $scope.$broadcast('scroll.infiniteScrollComplete');
+    Current.getShop(page).then(function(items) {
+      $scope.items = $scope.items.concat(items.rest);
+      $scope.$broadcast('scroll.infiniteScrollComplete');
     });
-    $scope.page ++;
-
+    page ++;
   };
 })
 
 //★★★★★★★★★DetailCtrl★★★★★★★★★★★★
 .controller('DetailCtrl', function($scope, $stateParams, Current){
-  $scope.item = Current.get($stateParams.currentId);
-  console.log($scope.item);
+  Current.get($stateParams.currentId).then(function(item) {
+    console.log(item);
+    $scope.item = item;
+  })
+  //$scope.item = Current.get($stateParams.currentId);
 })

@@ -1,15 +1,30 @@
 angular.module('myApp.service',[])
 .factory('Current', function($http){
   var items = [];
+  var item = [];
   var api = 'http://api.gnavi.co.jp/RestSearchAPI/20150630/';   //レストランAPIのURL
   var keyId = '16066d25035a3a1853e0a5220e77ab00'; //アクセスキー
-  var page = 0;
-  //var currentOptions = {timeout:3000, enableHighAccuracy:false};
   var latitude = 35.856999;
   var longitude = 139.648849;
+  var page = 1;
+  var options = {
+    enableHighAccuracy : true,
+    timeout : 5000,
+    maximumAge : 0
+  };
+
+  function success(pos) {
+    var crd = pos.coords;
+    latitude = crd.latitude;
+    longitude = crd.longitude;
+  };
+      function error(err) {
+        console.warn(error.code);
+      };
 
   return {
     getShop : function(page) {
+      navigator.geolocation.getCurrentPosition(success, error, options);
       return $http.jsonp(api, {
         params : {
           keyid : keyId,
@@ -21,19 +36,23 @@ angular.module('myApp.service',[])
           format : 'json'
         }
       }).then(function(response){
-        items = response;
-        return items.data.rest;
+        items = response.data;
+        return items;
       })
     },
+
     get : function(currentId) {
-      for(var i=0; i<items.data.rest.length; i++) {
-        console.log(items.data.rest[i]);
-        console.log(currentId);
-        if(items.data.rest[i].id === currentId){
-          return items.data.rest[i];
+      return $http.jsonp(api, {
+        params : {
+          keyid : keyId,
+          id : currentId,
+          callback : 'JSON_CALLBACK',
+          format : 'json'
         }
-      }
-      return null;
+      }).then(function(response) {
+        item = response.data.rest;
+        return item;
+      })
     }
   };
 })
