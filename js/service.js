@@ -18,9 +18,9 @@ angular.module('myApp.service',[])
     latitude = crd.latitude;
     longitude = crd.longitude;
   };
-      function error(err) {
-        console.warn(error.code);
-      };
+  function error(err) {
+    console.warn(error.code);
+  };
 
   return {
     getShop : function(page) {

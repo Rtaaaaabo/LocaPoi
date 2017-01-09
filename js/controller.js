@@ -21,5 +21,4 @@ angular.module('myApp.controller', [])
     console.log(item);
     $scope.item = item;
   })
-  //$scope.item = Current.get($stateParams.currentId);
 })
