@@ -5,6 +5,11 @@ angular.module('myApp.controller', [])
   $scope.items = [];
   $scope.item;
   var page = 1;
+  var options = {
+    enableHighAccuracy : true,
+    timeout : 5000,
+    maximumAge : 0
+  };
 
   $scope.loadMoreData = function() {
     Current.getShop(page).then(function(items) {
@@ -13,6 +18,22 @@ angular.module('myApp.controller', [])
     });
     page ++;
   };
+
+  $scope.getCurrent = function() {
+    navigator.geolocation.getCurrentPosition(success, error, options);
+
+    function success(pos) {
+      var crd = pos.coords;
+      latitude = crd.latitude;
+      longitude = crd.longitude;
+      Current.getShopCurrent(latitude, longitude).then(function(items) {
+        $scope.items = items.rest;
+      });
+    };
+    function error(err) {
+      console.warn(error.code);
+    };
+  }
 })
 
 //★★★★★★★★★DetailCtrl★★★★★★★★★★★★
