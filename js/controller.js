@@ -4,7 +4,9 @@ angular.module('myApp.controller', [])
 .controller('CurrentCtrl', function($scope, $cordovaGeolocation, Current){
   $scope.items = [];
   $scope.item;
-  var page = 1;
+  var page = 0;
+  var latitude;
+  var longitude;
   var options = {
     enableHighAccuracy : true,
     timeout : 5000,
@@ -12,28 +14,26 @@ angular.module('myApp.controller', [])
   };
 
   $scope.loadMoreData = function() {
-    Current.getShop(page).then(function(items) {
-      $scope.items = $scope.items.concat(items.rest);
-      $scope.$broadcast('scroll.infiniteScrollComplete');
-    });
+    navigator.geolocation.getCurrentPosition(success, error, options);
     page ++;
   };
 
   $scope.getCurrent = function() {
     navigator.geolocation.getCurrentPosition(success, error, options);
+  };
 
-    function success(pos) {
-      var crd = pos.coords;
-      latitude = crd.latitude;
-      longitude = crd.longitude;
-      Current.getShopCurrent(latitude, longitude).then(function(items) {
-        $scope.items = items.rest;
-      });
-    };
-    function error(err) {
-      console.warn(error.code);
-    };
-  }
+  function success(pos) {
+    var crd = pos.coords;
+    latitude = crd.latitude;
+    longitude = crd.longitude;
+    Current.getShopCurrent(page, latitude, longitude).then(function(items) {
+      $scope.items = $scope.items.concat(items.rest);
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+    });
+  };
+  function error(err) {
+    console.warn(error.code);
+  };
 })
 
 //★★★★★★★★★DetailCtrl★★★★★★★★★★★★

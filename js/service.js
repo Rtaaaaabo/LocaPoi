@@ -4,17 +4,14 @@ angular.module('myApp.service',[])
   var item = [];
   var api = 'http://api.gnavi.co.jp/RestSearchAPI/20150630/';   //レストランAPIのURL
   var keyId = '16066d25035a3a1853e0a5220e77ab00'; //アクセスキー
-  //var latitude = 35.856999;
-  //var longitude = 139.648849;
-  var page = 1;
 
   return {
     getShop : function(page) {
       return $http.jsonp(api, {
         params : {
           keyid : keyId,
-          latitude : 35.856999,
-          longitude : 139.648849,
+          latitude : latitude,
+          longitude : longitude,
           range : 3,
           offset_page : page,
           callback : 'JSON_CALLBACK',
@@ -26,14 +23,14 @@ angular.module('myApp.service',[])
       })
     },
 
-    getShopCurrent : function(latitude, longitude) {
+    getShopCurrent : function(page, latitude, longitude) {
       return $http.jsonp(api, {
         params : {
           keyid : keyId,
           latitude : latitude,
           longitude : longitude,
           range : 3,
-          offset_page : 1,
+          offset_page : page,
           callback : 'JSON_CALLBACK',
           format : 'json'
         }
@@ -57,9 +54,5 @@ angular.module('myApp.service',[])
         return item;
       })
     },
-
-    getCurrent : function(latitude, longitude) {
-
-    }
   };
 })
