@@ -55,15 +55,15 @@ angular.module('myApp.controller', [])
       zoom : 15,
       center:shopLatlng,
       mapTypeId : google.maps.MapTypeId.ROADMAP,
-      //icon : 'http://waox.main.jp/maps/icon/car2.png',
+      icon : 'http://waox.main.jp/maps/icon/car2.png',
       draggable : true
     };
     var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-    /*var marker = new google.maps.Marker({
-      map : map,
-      draggable: true,
-      animation: google.maps.Animation.DROP,
-      position : {lat : latitude, lng : longitude}
-    });*/
+    var marker = new google.maps.Marker({
+     position : shopLatlng,
+     map : map
+     //draggable: true,
+     //animation: google.maps.Animation.DROP
+    });
   }
 })
