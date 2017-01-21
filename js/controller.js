@@ -27,11 +27,16 @@ angular.module('myApp.controller', [])
     latitude = crd.latitude;
     longitude = crd.longitude;
     Current.getShopCurrent(page, latitude, longitude).then(function(items) {
+      $scope.noMoreItemAvailable = false;
       $scope.items = $scope.items.concat(items.rest);
+      if($scope.items.length == items.total_hit_count) {
+        $scope.noMoreItemAvailable = true;
+      };
       $scope.$broadcast('scroll.infiniteScrollComplete');
     });
   };
   function error(err) {
+    console.log(err);
     console.warn(error.code);
   };
 })
@@ -39,7 +44,26 @@ angular.module('myApp.controller', [])
 //★★★★★★★★★DetailCtrl★★★★★★★★★★★★
 .controller('DetailCtrl', function($scope, $stateParams, Current){
   Current.get($stateParams.currentId).then(function(item) {
-    console.log(item);
     $scope.item = item;
+    getMap(item.latitude, item.longitude);
+    //document.addEventListener('DOMContentLoaded', getMap(item.latitude, item.longitude), false);
   })
+
+  function getMap(latitude, longitude) {
+    var shopLatlng = new google.maps.LatLng(latitude, longitude);
+    var mapOptions = {
+      zoom : 15,
+      center:shopLatlng,
+      mapTypeId : google.maps.MapTypeId.ROADMAP,
+      //icon : 'http://waox.main.jp/maps/icon/car2.png',
+      draggable : true
+    };
+    var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+    /*var marker = new google.maps.Marker({
+      map : map,
+      draggable: true,
+      animation: google.maps.Animation.DROP,
+      position : {lat : latitude, lng : longitude}
+    });*/
+  }
 })
