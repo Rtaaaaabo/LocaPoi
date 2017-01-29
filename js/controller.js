@@ -43,27 +43,45 @@ angular.module('myApp.controller', [])
 
 //★★★★★★★★★DetailCtrl★★★★★★★★★★★★
 .controller('DetailCtrl', function($scope, $stateParams, Current){
+  var options = {
+    enableHighAccuracy : true,
+    timeout : 5000,
+    maximumAge : 0
+  };
   Current.get($stateParams.currentId).then(function(item) {
     $scope.item = item;
     getMap(item.latitude, item.longitude);
-    //document.addEventListener('DOMContentLoaded', getMap(item.latitude, item.longitude), false);
   })
 
   function getMap(latitude, longitude) {
-    var shopLatlng = new google.maps.LatLng(latitude, longitude);
-    var mapOptions = {
-      zoom : 15,
-      center:shopLatlng,
-      mapTypeId : google.maps.MapTypeId.ROADMAP,
-      icon : 'http://waox.main.jp/maps/icon/car2.png',
-      draggable : true
+    navigator.geolocation.getCurrentPosition(success, error, options);
+    function success(pos) {
+      var currentCrd = pos.coords;
+      var currentLat = currentCrd.latitude;
+      var currentLng = currentCrd.longitude;
+      var currentLatlng = new google.maps.LatLng(currentLat, currentLng);
+
+      var shopLatlng = new google.maps.LatLng(latitude, longitude);
+      var mapOptions = {
+        zoom : 17,
+        center:currentLatlng,
+        mapTypeId : google.maps.MapTypeId.ROADMAP,
+        icon : 'http://waox.main.jp/maps/icon/car2.png',
+        draggable : true
+      };
+      var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+      var shopMarker = new google.maps.Marker({
+      position : shopLatlng,
+      map : map
+      });
+      var currentMarker = new google.maps.Marker({
+      position : currentLatlng,
+      map : map
+      });
+    }
+    function error(err) {
+    console.log(err);
+    console.warn(error.code);
     };
-    var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-    var marker = new google.maps.Marker({
-     position : shopLatlng,
-     map : map
-     //draggable: true,
-     //animation: google.maps.Animation.DROP
-    });
   }
 })

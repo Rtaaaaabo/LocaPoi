@@ -33,6 +33,7 @@ angular.module('myApp.service',[])
         }
       }).then(function(response) {
         item = response.data.rest;
+        console.log(item);
         return item;
       })
     },
