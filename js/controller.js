@@ -43,20 +43,11 @@ angular.module('myApp.controller', [])
 
 //★★★★★★★★★DetailCtrl★★★★★★★★★★★★
 .controller('DetailCtrl', function($scope, $stateParams, Current){
-  var mapdiv = document.getElementById('map_canvas');
-  var renderOptions= {
-    draggable : true,
-    preserveVirewport : false
-  };
-  var directionsDisplay = new google.maps.DirectionsRenderer(renderOptions);
-  var directionsService = new google.maps.DirectionsService();
-
   var options = {
     enableHighAccuracy : true,
     timeout : 5000,
     maximumAge : 0
   };
-
   Current.get($stateParams.currentId).then(function(item) {
     $scope.item = item;
     getMap(item.latitude, item.longitude);
@@ -78,37 +69,19 @@ angular.module('myApp.controller', [])
         icon : 'http://waox.main.jp/maps/icon/car2.png',
         draggable : true
       };
-      var map = new google.maps.Map(mapdiv, mapOptions);
-      directionsDisplay.setMap(map);
-
-      /*var shopMarker = new google.maps.Marker({
+      var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+      var shopMarker = new google.maps.Marker({
       position : shopLatlng,
       map : map
-      });*/
-      /*var currentMarker = new google.maps.Marker({
-        position : currentLatlng,
-        map : map
-      });*/
-
-      calcRoute(currentLatlng, shopLatlng);
+      });
+      var currentMarker = new google.maps.Marker({
+      position : currentLatlng,
+      map : map
+      });
     }
     function error(err) {
     console.log(err);
     console.warn(error.code);
     };
-  }
-  function calcRoute(currentLatlng, shopLatlng) {
-    var request = {
-      origin : currentLatlng,
-      destination : shopLatlng,
-      travelMode : google.maps.DirectionsTravelMode.WALKING,
-      optimizeWaypoints : false
-    };
-    directionsService.route(request, function(response, status) {
-      console.log(response);
-      if(status == google.maps.DirectionsStatus.OK) {
-        directionsDisplay.setDirections(response);
-      }
-    });
   }
 })
