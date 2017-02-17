@@ -50,21 +50,26 @@ angular.module('myApp.controller', [])
   };
   Current.get($stateParams.currentId).then(function(item) {
     $scope.item = item;
-    console.log($scope.item.address);
-    getMap(item.latitude, item.longitude);
+    console.log(item.address);
+    getMap(item.address);
   })
 
-  function getMap(latitude, longitude) {
+  function getMap(address) {
     navigator.geolocation.getCurrentPosition(success, error, options);
     function success(pos) {
+      //住所から座標を取得する
+      var geocoder = new google.maps.Geocoder();
+
       //現在地取得に使用
       var currentCrd = pos.coords;
       var currentLat = currentCrd.latitude;
       var currentLng = currentCrd.longitude;
+
       //現在地の緯度と経度を変数currentLatlngに代入する
       var currentLatlng = new google.maps.LatLng(currentLat, currentLng);
       //お店の緯度と経度を変数shopLatlngに代入する
-      var shopLatlng = new google.maps.LatLng(latitude, longitude);
+      //var shopLatlng = new google.maps.LatLng(latitude, longitude);
+
       //GoogleMapのオプションを変数mapOptionsに代入する
       var mapOptions = {
         zoom : 17,
@@ -76,11 +81,32 @@ angular.module('myApp.controller', [])
       //mapを定義する
       var map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
+      //geocoder.geocode()メソッドを実行
+      geocoder.geocode(
+      {
+        'address' : address
+      },function(results,status) {
+        //geocodeが成功した場合
+        if (status == google.maps.GeocoderStatus.OK) {
+          //google.maps.Map()コンストラクタに定義されているsetCenter()メソッドで
+          //変換した緯度・経度情報を地図の中心に表示
+          //map.setCenter(results[0].geometry.location);
+
+          var marker = new google.maps.Marker({
+            map : map,
+            position : results[0].geometry.location
+          });
+        //ジオコーディングがうまくいかないとき
+        } else {
+          console.log('Geocode was not successful for the following reason:' + status);
+        }
+      });
+
       //お店の場所を変数にshopMarkerに代入する
-      var shopMarker = new google.maps.Marker({
+      /*var shopMarker = new google.maps.Marker({
       position : shopLatlng,
       map : map
-      });
+      });*/
       //現在地の場所をMarkerで表示
       var currentMarker = new google.maps.Marker({
       position : currentLatlng,
