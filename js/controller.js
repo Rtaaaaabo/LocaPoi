@@ -43,6 +43,13 @@ angular.module('myApp.controller', [])
 
 //★★★★★★★★★DetailCtrl★★★★★★★★★★★★
 .controller('DetailCtrl', function($scope, $stateParams, Current){
+  var renderOptions = {
+    draggable : true,
+    preserveViewport : false
+  };
+  var directionsDisplay = new google.maps.DirectionsRenderer(renderOptions);
+  var directionsService = new google.maps.DirectionsService();
+
   var options = {
     enableHighAccuracy : true,
     timeout : 5000,
@@ -67,10 +74,7 @@ angular.module('myApp.controller', [])
 
       //現在地の緯度と経度を変数currentLatlngに代入する
       var currentLatlng = new google.maps.LatLng(currentLat, currentLng);
-      //お店の緯度と経度を変数shopLatlngに代入する
-      //var shopLatlng = new google.maps.LatLng(latitude, longitude);
 
-      //GoogleMapのオプションを変数mapOptionsに代入する
       var mapOptions = {
         zoom : 17,
         center: currentLatlng,
@@ -78,20 +82,23 @@ angular.module('myApp.controller', [])
         icon : 'http://waox.main.jp/maps/icon/car2.png',
         draggable : true
       };
-      //mapを定義する
-      var map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
+      var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+      //現在地の場所をMarkerで表示
+      var currentMarker = new google.maps.Marker({
+      position : currentLatlng,
+      map : map
+      });
+      directionsDisplay.setMap(map);
+      calcRoute(currentLatlng, address);
       //geocoder.geocode()メソッドを実行
-      geocoder.geocode(
+      /*geocoder.geocode(
       {
         'address' : address
       },function(results,status) {
         //geocodeが成功した場合
+        console.log(results);
         if (status == google.maps.GeocoderStatus.OK) {
-          //google.maps.Map()コンストラクタに定義されているsetCenter()メソッドで
-          //変換した緯度・経度情報を地図の中心に表示
-          //map.setCenter(results[0].geometry.location);
-
           var marker = new google.maps.Marker({
             map : map,
             position : results[0].geometry.location
@@ -100,22 +107,33 @@ angular.module('myApp.controller', [])
         } else {
           console.log('Geocode was not successful for the following reason:' + status);
         }
-      });
+      });*/
 
       //お店の場所を変数にshopMarkerに代入する
       /*var shopMarker = new google.maps.Marker({
       position : shopLatlng,
       map : map
       });*/
-      //現在地の場所をMarkerで表示
-      var currentMarker = new google.maps.Marker({
-      position : currentLatlng,
-      map : map
-      });
+
     }
     function error(err) {
     console.log(err);
     console.warn(error.code);
     };
+  }
+
+  function calcRoute(currentLatlng, address) {
+    var request = {
+      origin : currentLatlng,
+      destination : address,
+      travelMode : google.maps.DirectionsTravelMode.WALKING,
+      optimizeWaypoints : false
+    };
+    directionsService.route(request, function(response, status) {
+      console.log(response);
+      if(status == google.maps.DirectionsStatus.OK) {
+        directionsDisplay.setDirections(response);
+      }
+    });
   }
 })
